@@ -1,0 +1,39 @@
+version: '3.8'
+name: "lucky-challenge"
+services:
+  application:
+    container_name: lucky-challenge
+    env_file: ./../.env
+    build:
+      dockerfile: .docker/Dockerfile
+      context: ./../
+      target: development
+    ports: 
+      - 3002:3000
+    volumes:
+      - "./../:/src"
+      - "/var/www/node_modules"
+    depends_on:
+      lucky-challenge-mysql:
+        condition: service_healthy
+
+  lucky-challenge-mysql:
+    image: mysql:5.7
+    platform: linux/amd64
+    container_name: lucky-challenge-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=lucky-challenge
+    restart: always
+    ports:
+      - 2409:3306
+    volumes:
+      - lucky-challenge-data:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1
+      interval: 5s
+      timeout: 5s
+      retries: 3
+  
+volumes:
+    lucky-challenge-data:
