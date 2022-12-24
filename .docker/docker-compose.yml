@@ -12,7 +12,7 @@ services:
       - 3002:3000
     volumes:
       - "./../:/src"
-      - "/var/www/node_modules"
+      - "/src/node_modules"
     depends_on:
       lucky-challenge-mysql:
         condition: service_healthy

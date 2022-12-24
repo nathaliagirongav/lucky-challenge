@@ -6,8 +6,7 @@ import { UserCreationService } from '@/user/user.creation.service';
 export class UserController {
   constructor(
     private userCreationService: UserCreationService
-  ) {
-  }
+  ) {}
 
   @Post('create')
   public async create(@Body() dto: UserCreateDto): Promise<any> {

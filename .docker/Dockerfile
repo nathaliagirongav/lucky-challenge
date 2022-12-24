@@ -1,13 +1,11 @@
-FROM node:18 as development
+FROM node:18-alpine as development
 
 WORKDIR /src
 
-COPY package*.json ./
+COPY package*.json .
 
 RUN npm ci && npm cache clean --force
 
-RUN npm install
-
-COPY . ./
+COPY tsconfig.json .
 
 CMD ["npm", "run", "start:dev"]

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
 import { UserDto } from '@/user/dto/user.dto';
 import { LocationService } from '@/location/location.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -27,9 +28,10 @@ export class UserService {
     username: string,
     password: string
   ): Promise<number> {
-    // TODO password with Encryption or Hashing
+    const hashedPassword: string = await this.hash(password);
+
     const createdUser = await this.queryRunner.query(
-      `INSERT INTO user(username, password) VALUES ('${username}', '${password}');`
+      `INSERT INTO user(username, password) VALUES ('${username}', '${hashedPassword}');`
     );
 
     return createdUser.insertId;
@@ -45,5 +47,12 @@ export class UserService {
     );
 
     return createdProfile.insertId;
+  }
+
+  private async hash(text: string): Promise<string> {
+    const rounds = 10;
+    const salt = await bcrypt.genSalt(rounds);
+
+    return bcrypt.hash(text, salt);
   }
 }
