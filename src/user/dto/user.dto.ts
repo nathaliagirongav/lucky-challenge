@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString
+} from 'class-validator';
 import { UserProfileDto } from '@/user/dto/user.profile.dto';
 
 export class UserDto {
@@ -6,9 +12,11 @@ export class UserDto {
     Object.assign(this, { ...object });
   }
 
+  @IsOptional() @IsNumber() public id: number;
+
   @IsNotEmpty() @IsString() public username: string;
 
   @IsNotEmpty() @IsString() public password: string;
 
-  @IsOptional() public profile: UserProfileDto;
+  @IsOptional() @IsObject() public profile: UserProfileDto;
 }

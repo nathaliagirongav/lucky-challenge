@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UserService } from '@/user/user.service';
 import { LocationService } from '@/location/location.service';
 import { UserCreateDto } from '@/user/dto/user.create.dto';
-import { UserCreationException } from '@/errors';
+import { UserCreationException } from '@/user/errors';
 import { DataSource, QueryRunner } from 'typeorm';
 
 @Injectable()

@@ -49,6 +49,10 @@ export class UserService {
     return createdProfile.insertId;
   }
 
+  public async validatePassword(givenPassword: string, existingPassword: string): Promise<boolean> {
+    return bcrypt.compare(givenPassword, existingPassword);
+  }
+
   private async hash(text: string): Promise<string> {
     const rounds = 10;
     const salt = await bcrypt.genSalt(rounds);
