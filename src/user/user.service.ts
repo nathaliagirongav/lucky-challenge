@@ -3,6 +3,9 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { UserDto } from '@/user/dto/user.dto';
 import { LocationService } from '@/location/location.service';
 import * as bcrypt from 'bcrypt';
+import { UserInformation } from '@/user';
+import { UserException } from '@/user/errors';
+import { ProfileService } from '@/profile/profile.service';
 
 @Injectable()
 export class UserService {
@@ -11,6 +14,7 @@ export class UserService {
   constructor(
     @Inject('DATABASE_CONNECTION')
     private connection: DataSource,
+    private readonly profileService: ProfileService,
     private readonly locationService: LocationService,
   ) {
     this.queryRunner = this.connection.createQueryRunner();
@@ -51,6 +55,25 @@ export class UserService {
 
   public async validatePassword(givenPassword: string, existingPassword: string): Promise<boolean> {
     return bcrypt.compare(givenPassword, existingPassword);
+  }
+
+  public async getUserData(username: string): Promise<UserInformation> {
+    const user = await this.findOne(username);
+
+    if (!user) throw UserException.userDoesNotExist(username);
+
+    const profile = await this.profileService.getProfile(user.id);
+    const address = await this.locationService.getAddress(profile.addressId);
+
+    return {
+      id: user.id,
+      name: profile.name,
+      address: {
+        street: address.street,
+        city: address.city,
+        country: address.country,
+      }
+    }
   }
 
   private async hash(text: string): Promise<string> {

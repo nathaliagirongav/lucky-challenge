@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
-import { UserProfileDto } from '@/user/dto/user.profile.dto';
+import { UserProfileDto } from '@/profile/user.profile.dto';
 
 export class UserDto {
   constructor(object: Partial<UserDto>) {

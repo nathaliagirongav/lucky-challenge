@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
 import { CityDto } from '@/location/dto/city.dto';
+import { AddressDto } from '@/location/dto/address.dto';
 
 @Injectable()
 export class LocationService {
@@ -27,5 +28,18 @@ export class LocationService {
     );
     
     return createdAddress.insertId;
+  }
+
+  public async getAddress(addressId: number): Promise<AddressDto | null> {
+    const result = await this.queryRunner.query(
+      `SELECT a.street, c.name AS city, co.name AS country
+      FROM address AS a
+      JOIN city AS c ON a.cityId = c.id
+      JOIN country AS co ON c.countryId = co.id
+      WHERE a.id = ${addressId}
+      ORDER BY a.created_at desc`
+    );
+
+    return result.length > 0 ? new AddressDto(result[0]) : null;
   }
 }
