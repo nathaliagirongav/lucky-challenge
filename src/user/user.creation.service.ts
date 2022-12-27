@@ -35,6 +35,8 @@ export class UserCreationService {
       await this.userService.createUserProfile(userId, addressId, user.name)
 
       this.queryRunner.commitTransaction();
+
+      return this.userService.getUserData(user.username);
     } catch (error) {
       this.queryRunner.rollbackTransaction();
 

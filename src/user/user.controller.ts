@@ -23,8 +23,7 @@ export class UserController {
 
   @Post('create')
   public async create(@Body() dto: UserCreateDto): Promise<any> {
-    await this.userCreationService.create(dto);
-    // TODO response
+    return this.userCreationService.create(dto);
   } 
 
   @UseGuards(LocalAuthGuard)
