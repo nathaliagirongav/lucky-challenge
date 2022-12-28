@@ -8,4 +8,4 @@ RUN npm ci && npm cache clean --force
 
 COPY tsconfig.json .
 
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "migrate-and-start"]
