@@ -1,73 +1,99 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# lucky-challenge
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+### User's management system.
+Provides functionalities to store and retrieve user's profiles with detailed location information. The database model allows to persist relevant data for the user such as: username, password, name, address, city and country.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The system features an authentication and authorization process including _basic auth_ (with username and password) and _access token based auth_ (with JWT).
 
-## Description
+Exceptions are handled by a custom error managing layer.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+For this project, it was used:
 
-## Installation
-
-```bash
-$ npm install
-```
-
+* `docker` for creating container for the application
+* `mysql 5.7` database
+* `NestJS` as main framework of the application
+* `Jest` for testing
+* `TypeORM` for database manipulation, not relying on entity pattern but in query builders
+* `class-validator` for validation pipes strategies
+* `bcrypt` for password hashing
+* `passport` authentication middleware for basic and access token auth
+<br></br>
 ## Running the app
+Follow the next steps in order to run the app:
 
-```bash
-# development
-$ npm run start
+**1.** Create a ***.env*** file in the root directory of the project and set the environment variables following the
+schema guidelines in the ***.env.dist file***.
+The .env file lets us customize the individual working environment variables.
 
-# watch mode
-$ npm run start:dev
+Example:
 
-# production mode
-$ npm run start:prod
+```
+##########
+# Application
+##########
+APP_TIMEZONE=local
+
+##########
+# Database
+##########
+DATABASE_HOST=127.0.0.1
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=root
+DATABASE_NAME=lucky-challenge
+DATABASE_PORT=2409
+
+##########
+# JWT
+##########
+JWT_SECRET_KEY=random-key
+
 ```
 
+**2.** Run docker local setup. (Ensure docker Desktop is up and running).
+
+**Build image:**
+```bash
+$ docker compose -f .docker/docker-compose.yml build
+```
+**Start containers:**
+```bash
+$ docker compose -f .docker/docker-compose.yml up -d
+```
+This will start the following containers:
+* Container lucky-challenge-mysql
+* Container lucky-challenge
+
+Make sure the database container is in status Healthy and the application container is in status Started. Otherwise, excecute again.
+<br></br>
+
+_Note: The command to stop containers:_
+```bash
+$ docker compose -f .docker/docker-compose.yml down
+```
+
+**3.** The application is now up, you can check the application is running by doing a request as follows:
+
+```bash
+$ curl http://localhost:3002/application/status
+```
+
+
+**Note:**
+
+- Migrations are run once the application container is started.
+- For simplicity, the tables city and country were initialized.
+- Database seeding for the previously mentioned tables was done using a migration.
+- The default port for the application is: 3002.
+- The default port for the database is: 2409.
+<br></br>
 ## Test
-
+For running the tests inside the container:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ docker exec -it lucky-challenge npm run test
 ```
+## Endpoint's documentation
+Endpoint's documentation can be found in this [section](./docs/endpoints.md). 
 
-## Support
+(It can be generated automatically using swagger with openapi, but in this case the APIs are just listed in a markdown file).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
