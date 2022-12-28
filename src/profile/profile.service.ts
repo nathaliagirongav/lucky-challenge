@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
-import { UserProfileDto } from '@/profile/user.profile.dto';
+import { UserProfileDto } from '@/profile/dto/user.profile.dto';
 
 @Injectable()
 export class ProfileService {

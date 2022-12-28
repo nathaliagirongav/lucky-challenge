@@ -15,12 +15,17 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(async() => {
+    await app.close();
+  });
+
   it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/application/status')
       .expect(200)
       .expect({
-        available: true
+        available: true,
+        db: true,
       });
   });
 });
